@@ -1,0 +1,1 @@
+"""Unofficial educational character catalog."""

@@ -1,0 +1,23 @@
+name: Checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  local:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --require-hashes -r requirements.txt -r requirements-dev.txt
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: pytest -q
+      - run: az bicep build --file infra/main.bicep --stdout > /dev/null
+      - run: az bicep build --file infra/app.bicep --stdout > /dev/null
+      - run: docker build -t mcp-catalog:test .

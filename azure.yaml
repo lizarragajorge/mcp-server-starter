@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: mcp-catalog-workshop
+infra:
+  provider: bicep
+  path: infra
+  module: main
+hooks:
+  preprovision:
+    shell: sh
+    run: python3 scripts/deploy.py --check
+    interactive: true
+  postprovision:
+    shell: sh
+    run: python3 scripts/deploy.py
+    interactive: true
